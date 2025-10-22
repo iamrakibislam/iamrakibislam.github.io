@@ -15,33 +15,34 @@
         /* ------------------- */
         /* 1. Global & Variables */
         /* ------------------- */
-        
-        /* * By default, we use the DARK THEME variables.
-         * The 'body.light-mode' selector will override these.
-        */
         :root {
             --primary-color: #00aaff;
+            --header-height: 60px;
+
+            /* Modern Border Radius */
+            --border-radius-sm: 8px;
+            --border-radius-md: 12px;
+            --border-radius-lg: 16px;
+            --border-radius-pill: 50px;
             
             /* Dark Theme (Default) */
-            --bg-color: #121212;
-            --surface-color: #1e1e1e;
-            --text-color: #f0f0f0;
+            --bg-color: #111111;
+            --surface-color: #1a1a1a;
+            --text-color: #f5f5f5;
             --secondary-text-color: #a0a0a0;
             --border-color: #333;
-            --header-bg: rgba(30, 30, 30, 0.9);
-            --shadow-color: rgba(0, 0, 0, 0.3);
-
-            --header-height: 60px;
+            --header-bg: rgba(26, 26, 26, 0.75); /* Semi-transparent for glass effect */
+            --shadow-color: rgba(0, 0, 0, 0.25);
         }
 
         body.light-mode {
             /* Light Theme */
-            --bg-color: #f4f4f4;
+            --bg-color: #f8f9fa;
             --surface-color: #ffffff;
-            --text-color: #121212;
+            --text-color: #212529;
             --secondary-text-color: #555;
-            --border-color: #ddd;
-            --header-bg: rgba(255, 255, 255, 0.9);
+            --border-color: #e0e0e0;
+            --header-bg: rgba(255, 255, 255, 0.75); /* Semi-transparent for glass effect */
             --shadow-color: rgba(0, 0, 0, 0.1);
         }
 
@@ -67,9 +68,8 @@
 
         /* --- Custom Cursor --- */
         body, a, button, .btn {
-            cursor: none; /* Hide default cursor */
+            cursor: none;
         }
-        
         .cursor-dot,
         .cursor-outline {
             position: fixed;
@@ -81,30 +81,23 @@
             pointer-events: none;
             transition: opacity 0.3s ease, transform 0.1s ease;
         }
-        
         .cursor-dot {
             width: 8px;
             height: 8px;
             background-color: var(--primary-color);
         }
-
         .cursor-outline {
             width: 30px;
             height: 30px;
             border: 2px solid var(--primary-color);
             opacity: 0.7;
         }
-        
-        /* Cursor hover effect */
-        .cursor-hover .cursor-dot {
-            opacity: 0;
-        }
+        .cursor-hover .cursor-dot { opacity: 0; }
         .cursor-hover .cursor-outline {
             transform: translate(-50%, -50%) scale(1.5);
             background-color: rgba(0, 170, 255, 0.2);
         }
         /* --- End Custom Cursor --- */
-
 
         h1, h2, h3, h4, h5, h6 {
             color: var(--text-color);
@@ -115,7 +108,7 @@
         }
 
         h1 { font-size: 3.5rem; }
-        h2 { font-size: 2.5rem; }
+        h2 { font-size: 2.8rem; }
         h3 { font-size: 1.75rem; }
 
         p {
@@ -129,20 +122,10 @@
             text-decoration: none;
             transition: color 0.3s ease;
         }
+        a:hover { color: var(--text-color); }
 
-        a:hover {
-            color: var(--text-color);
-        }
-
-        img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        ul {
-            list-style: none;
-        }
+        img { max-width: 100%; height: auto; display: block; }
+        ul { list-style: none; }
 
         /* ------------------- */
         /* 2. Utility Classes  */
@@ -158,16 +141,28 @@
             overflow: hidden;
         }
 
-        .section-title {
+        .section-header {
             text-align: center;
             margin-bottom: 4rem;
-            position: relative;
         }
-
+        .section-subtitle {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+        .section-title {
+            margin-bottom: 0;
+            position: relative;
+            padding-bottom: 1.25rem;
+        }
         .section-title::after {
             content: '';
             position: absolute;
-            bottom: -10px;
+            bottom: 0;
             left: 50%;
             transform: translateX(-50%);
             width: 80px;
@@ -180,18 +175,16 @@
             display: inline-block;
             background: var(--primary-color);
             color: #fff;
-            padding: 0.75rem 1.5rem;
-            border-radius: 50px;
+            padding: 0.75rem 1.75rem;
+            border-radius: var(--border-radius-pill);
             font-weight: 500;
             border: 2px solid var(--primary-color);
             transition: all 0.3s ease;
         }
-
         .btn:hover {
             background: transparent;
             color: var(--primary-color);
         }
-
         .btn-secondary {
             background: transparent;
             color: var(--text-color);
@@ -203,7 +196,7 @@
             border-color: var(--primary-color);
         }
 
-        /* Fade-in animation (for JS) */
+        /* Fade-in animation */
         .fade-in {
             opacity: 0;
             transform: translateY(30px);
@@ -226,14 +219,17 @@
             display: flex;
             align-items: center;
             z-index: 1000;
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            background-color: transparent; /* Transparent by default */
+            transition: background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
         }
 
+        /* --- GLASSMORPHISM STICKY HEADER --- */
         .header.sticky {
             background-color: var(--header-bg);
-            box-shadow: 0 2px 10px var(--shadow-color);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 4px 12px var(--shadow-color);
+            border-bottom: 1px solid var(--border-color);
         }
 
         .navbar {
@@ -248,16 +244,13 @@
             font-weight: 700;
             color: var(--text-color);
         }
-        .logo span {
-            color: var(--primary-color);
-        }
+        .logo span { color: var(--primary-color); }
 
         .nav-links {
             display: flex;
             align-items: center;
             gap: 2rem;
         }
-
         .nav-link {
             color: var(--text-color);
             font-weight: 500;
@@ -275,12 +268,8 @@
             transition: width 0.3s ease;
         }
         .nav-link:hover::after,
-        .nav-link.active::after {
-            width: 100%;
-        }
-        .nav-link.active {
-            color: var(--primary-color);
-        }
+        .nav-link.active::after { width: 100%; }
+        .nav-link.active { color: var(--primary-color); }
 
         .nav-controls {
             display: flex;
@@ -288,35 +277,22 @@
             gap: 1rem;
         }
 
-        /* --- Theme Toggle Button --- */
         .theme-toggle {
             font-size: 1.2rem;
             color: var(--text-color);
-            cursor: none; /* Already set on body, but good to be explicit */
             background: none;
             border: none;
             padding: 0.25rem;
         }
-        .theme-toggle .fa-sun {
-            display: none; /* Hidden in dark mode (default) */
-        }
-        .theme-toggle .fa-moon {
-            display: block; /* Shown in dark mode (default) */
-        }
-        body.light-mode .theme-toggle .fa-sun {
-            display: block;
-        }
-        body.light-mode .theme-toggle .fa-moon {
-            display: none;
-        }
-        /* --- End Theme Toggle --- */
-
+        .theme-toggle .fa-sun { display: none; }
+        .theme-toggle .fa-moon { display: block; }
+        body.light-mode .theme-toggle .fa-sun { display: block; }
+        body.light-mode .theme-toggle .fa-moon { display: none; }
 
         .menu-toggle {
-            display: none; /* Hidden on desktop */
+            display: none;
             font-size: 1.5rem;
             color: var(--text-color);
-            cursor: none;
             background: none;
             border: none;
         }
@@ -324,6 +300,17 @@
         /* ------------------- */
         /* 4. Home / Hero      */
         /* ------------------- */
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         #home {
             height: 100vh;
             min-height: 600px;
@@ -331,49 +318,47 @@
             align-items: center;
             justify-content: center;
             text-align: center;
-            /* Dark overlay is good for both light/dark mode text visibility */
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') no-repeat center center/cover;
-            position: relative;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto-format&fit=crop&w=2070&q=80') no-repeat center center/cover;
+            overflow: hidden; /* For animations */
         }
 
-        .home-content {
-            max-width: 800px;
-        }
-
+        .home-content { max-width: 800px; }
         .home-content h3 {
             font-size: 1.5rem;
             font-weight: 400;
-            color: #eee; /* Kept light for hero bg */
+            color: #eee;
+            opacity: 0;
+            animation: slideInUp 0.6s ease-out 0.2s forwards;
         }
-
         .home-content h1 {
             font-size: 4rem;
             margin: 0.5rem 0;
-            color: #fff; /* Kept light for hero bg */
+            color: #fff;
+            opacity: 0;
+            animation: slideInUp 0.6s ease-out 0.4s forwards;
         }
-
-        .home-content h1 span {
-            color: var(--primary-color);
-        }
-
+        .home-content h1 span { color: var(--primary-color); }
         .home-content .subtitle {
             font-size: 1.75rem;
             font-weight: 500;
             margin-bottom: 2rem;
-            color: #f0f0f0; /* Kept light for hero bg */
+            color: #f0f0f0;
+            opacity: 0;
+            animation: slideInUp 0.6s ease-out 0.6s forwards;
         }
-        
         .home-content p {
-            color: #ddd; /* Kept light for hero bg */
+            color: #ddd;
+            opacity: 0;
+            animation: slideInUp 0.6s ease-out 0.8s forwards;
         }
-
         .home-buttons {
             display: flex;
             justify-content: center;
             gap: 1rem;
             margin-top: 2rem;
+            opacity: 0;
+            animation: slideInUp 0.6s ease-out 1s forwards;
         }
-        /* Override for hero buttons */
         .home-buttons .btn-secondary {
             color: #fff;
             border-color: #fff;
@@ -393,27 +378,19 @@
             gap: 3rem;
             align-items: center;
         }
-        
         .about-image {
             width: 300px;
             height: 300px;
-            background: var(--surface-color);
             border: 5px solid var(--border-color);
             border-radius: 50%;
             margin: 0 auto;
             background-image: url('https://via.placeholder.com/300'); 
             background-size: cover;
             background-position: center;
-            transition: border-color 0.3s ease, background-color 0.3s ease;
+            transition: border-color 0.3s ease;
         }
-
-        .about-text h3 {
-            color: var(--primary-color);
-        }
-
-        .about-text .btn {
-            margin-top: 1rem;
-        }
+        .about-text h3 { color: var(--primary-color); }
+        .about-text .btn { margin-top: 1rem; }
 
         /* ------------------- */
         /* 6. Skills Section   */
@@ -422,26 +399,24 @@
             background-color: var(--surface-color);
             transition: background-color 0.3s ease;
         }
-        
         .skills-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 2rem;
         }
-
         .skill-category {
             background-color: var(--bg-color);
             padding: 2rem;
-            border-radius: 10px;
+            border-radius: var(--border-radius-lg);
             border: 1px solid var(--border-color);
+            box-shadow: 0 8px 24px var(--shadow-color);
             transition: all 0.3s ease;
         }
-
         .skill-category:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px var(--shadow-color);
+            transform: translateY(-8px);
+            border-color: var(--primary-color);
+            box-shadow: 0 12px 32px var(--shadow-color);
         }
-
         .skill-category h3 {
             color: var(--primary-color);
             margin-bottom: 1.5rem;
@@ -449,22 +424,25 @@
             align-items: center;
             gap: 0.5rem;
         }
-
         .skill-list {
             display: flex;
             flex-wrap: wrap;
             gap: 0.75rem;
         }
-
         .skill-item {
             background-color: var(--surface-color);
             color: var(--secondary-text-color);
             padding: 0.5rem 1rem;
-            border-radius: 20px;
+            border-radius: var(--border-radius-pill);
             font-size: 0.9rem;
             font-weight: 500;
             border: 1px solid var(--border-color);
             transition: all 0.3s ease;
+        }
+        .skill-item:hover {
+            color: var(--text-color);
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
         }
 
         /* ------------------- */
@@ -475,22 +453,20 @@
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
         }
-
         .service-card {
             background-color: var(--surface-color);
             padding: 2.5rem 2rem;
-            border-radius: 10px;
+            border-radius: var(--border-radius-lg);
             text-align: center;
-            border-bottom: 4px solid transparent;
-            box-shadow: 0 5px 15px var(--shadow-color);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 8px 24px var(--shadow-color);
             transition: all 0.3s ease;
         }
-
         .service-card:hover {
-            transform: translateY(-10px);
-            border-bottom-color: var(--primary-color);
+            transform: translateY(-8px);
+            border-color: var(--primary-color);
+            box-shadow: 0 12px 32px var(--shadow-color);
         }
-
         .service-card .icon {
             font-size: 3rem;
             color: var(--primary-color);
@@ -504,25 +480,21 @@
             background-color: var(--surface-color);
             transition: background-color 0.3s ease;
         }
-
         .resume-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 4rem;
         }
-
         .resume-column h3 {
             color: var(--primary-color);
             margin-bottom: 2rem;
         }
-
         .timeline-item {
             position: relative;
             padding: 1rem 0 2rem 2rem;
             border-left: 2px solid var(--border-color);
             transition: border-color 0.3s ease;
         }
-
         .timeline-item::before {
             content: '';
             position: absolute;
@@ -535,28 +507,18 @@
             border: 4px solid var(--primary-color);
             transition: background-color 0.3s ease;
         }
-
-        .timeline-item h4 {
-            font-size: 1.25rem;
-            color: var(--text-color);
-            margin-bottom: 0.25rem;
-        }
-        
         .timeline-item .date {
             display: inline-block;
             font-size: 0.9rem;
             color: var(--secondary-text-color);
             background-color: var(--bg-color);
-            padding: 0.25rem 0.75rem;
-            border-radius: 15px;
+            padding: 0.25rem 1rem;
+            border-radius: var(--border-radius-pill);
             margin-bottom: 0.75rem;
+            border: 1px solid var(--border-color);
             transition: all 0.3s ease;
         }
-
-        .timeline-item p {
-            font-size: 0.95rem;
-            margin-bottom: 0;
-        }
+        .timeline-item p { font-size: 0.95rem; margin-bottom: 0; }
 
         /* ------------------- */
         /* 9. Portfolio Section*/
@@ -566,19 +528,19 @@
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 2rem;
         }
-        
         .project-card {
             background-color: var(--surface-color);
-            border-radius: 10px;
+            border-radius: var(--border-radius-lg);
             overflow: hidden;
-            box-shadow: 0 5px 15px var(--shadow-color);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 8px 24px var(--shadow-color);
             transition: all 0.3s ease;
         }
-
         .project-card:hover {
-            transform: scale(1.03);
+            transform: translateY(-8px);
+            border-color: var(--primary-color);
+            box-shadow: 0 12px 32px var(--shadow-color);
         }
-
         .project-image {
             width: 100%;
             height: 220px;
@@ -587,48 +549,46 @@
             background-size: cover;
             background-position: center;
         }
-
-        .project-content {
-            padding: 1.5rem;
+        .project-content { padding: 1.5rem; }
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
         }
-
         .project-tag {
             font-size: 0.8rem;
             background-color: var(--bg-color);
             color: var(--primary-color);
             padding: 0.25rem 0.75rem;
-            border-radius: 15px;
+            border-radius: var(--border-radius-pill);
+            border: 1px solid var(--border-color);
             transition: all 0.3s ease;
         }
-
         .project-links a {
             font-size: 1.2rem;
             margin-right: 1rem;
             color: var(--secondary-text-color);
         }
+        .project-links a:hover { color: var(--primary-color); }
 
         /* ------------------- */
         /* 10. Stats Section   */
         /* ------------------- */
         #stats {
             background: linear-gradient(rgba(0, 170, 255, 0.8), rgba(0, 170, 255, 0.8)), url('https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80') no-repeat center center/cover;
-            background-attachment: fixed; /* Parallax effect */
+            background-attachment: fixed;
             text-align: center;
             color: #fff;
         }
-
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 2rem;
         }
-        /* All text in stats is light, so no changes needed for light/dark */
-        .stat-item h3 {
-            color: #fff;
-        }
-        .stat-item p {
-            color: #fff;
-        }
+        .stat-item .icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        .stat-item h3 { font-size: 2.5rem; color: #fff; margin: 0; }
+        .stat-item p { font-size: 1.1rem; color: #fff; margin: 0; }
 
         /* ------------------- */
         /* 11. Testimonials    */
@@ -637,40 +597,75 @@
             background-color: var(--surface-color);
             transition: background-color 0.3s ease;
         }
-
+        .testimonial-slider { max-width: 800px; margin: 0 auto; text-align: center; }
         .testimonial-card {
             background-color: var(--bg-color);
-            padding: 2rem;
-            border-radius: 10px;
+            padding: 2.5rem;
+            border-radius: var(--border-radius-lg);
+            border: 1px solid var(--border-color);
             border-left: 5px solid var(--primary-color);
-            box-shadow: 0 5px 15px var(--shadow-color);
+            box-shadow: 0 8px 24px var(--shadow-color);
             transition: all 0.3s ease;
         }
-
         .testimonial-card p.quote {
             font-size: 1.1rem;
             font-style: italic;
             color: var(--text-color);
             margin-bottom: 1.5rem;
         }
-        
-        .author-info h4 {
-            color: var(--text-color);
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
         }
+        .author-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #555;
+            background-image: url('https://via.placeholder.com/60');
+        }
+        .author-info h4 { margin: 0; color: var(--text-color); }
+        .author-info p { margin: 0; font-size: 0.9rem; }
 
         /* ------------------- */
         /* 12. Blog Section    */
         /* ------------------- */
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
         .blog-card {
             background-color: var(--surface-color);
-            border-radius: 10px;
+            border-radius: var(--border-radius-lg);
             overflow: hidden;
-            box-shadow: 0 5px 15px var(--shadow-color);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 8px 24px var(--shadow-color);
             transition: all 0.3s ease;
         }
         .blog-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-8px);
+            border-color: var(--primary-color);
+            box-shadow: 0 12px 32px var(--shadow-color);
         }
+        .blog-image {
+            width: 100%;
+            height: 200px;
+            background-color: #333;
+            background-image: url('https://via.placeholder.com/400x200/333/888/?text=Blog+Article');
+            background-size: cover;
+            background-position: center;
+        }
+        .blog-content { padding: 1.5rem; }
+        .blog-content .date {
+            font-size: 0.85rem;
+            color: var(--secondary-text-color);
+            margin-bottom: 0.5rem;
+        }
+        .blog-content h3 { font-size: 1.25rem; margin-bottom: 1rem; }
+        .blog-content a { font-weight: 500; }
 
         /* ------------------- */
         /* 13. Contact Section */
@@ -679,7 +674,17 @@
             background-color: var(--surface-color);
             transition: background-color 0.3s ease;
         }
-
+        .contact-container {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 3rem;
+        }
+        .contact-info-item {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
         .contact-info-item .icon {
             font-size: 1.5rem;
             color: var(--primary-color);
@@ -691,25 +696,27 @@
             place-items: center;
             transition: background-color 0.3s ease;
         }
-
+        .contact-info-item h4 { margin: 0 0 0.25rem 0; }
+        .contact-info-item p { margin: 0; }
+        .contact-form .form-group { margin-bottom: 1.5rem; }
         .contact-form input,
         .contact-form textarea {
             width: 100%;
             padding: 0.75rem 1rem;
             background-color: var(--bg-color);
             border: 1px solid var(--border-color);
-            border-radius: 5px;
+            border-radius: var(--border-radius-sm);
             color: var(--text-color);
             font-family: 'Poppins', sans-serif;
             transition: all 0.3s ease;
         }
-
         .contact-form input:focus,
         .contact-form textarea:focus {
             outline: none;
             border-color: var(--primary-color);
             box-shadow: 0 0 5px rgba(0, 170, 255, 0.5);
         }
+        .contact-form textarea { min-height: 150px; resize: vertical; }
 
         /* ------------------- */
         /* 14. Footer          */
@@ -721,7 +728,12 @@
             border-top: 1px solid var(--border-color);
             transition: all 0.3s ease;
         }
-
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
         .social-links a {
             font-size: 1.5rem;
             color: var(--secondary-text-color);
@@ -732,7 +744,6 @@
             border-radius: 50%;
             transition: all 0.3s ease;
         }
-
         .social-links a:hover {
             color: var(--primary-color);
             border-color: var(--primary-color);
@@ -761,17 +772,12 @@
             transform: translateY(20px);
             transition: all 0.3s ease;
         }
-
         .scroll-top-btn.visible {
             opacity: 1;
             visibility: visible;
             transform: translateY(0);
         }
-
-        .scroll-top-btn:hover {
-            color: #fff;
-            transform: scale(1.1);
-        }
+        .scroll-top-btn:hover { color: #fff; transform: scale(1.1); }
 
         /* ------------------- */
         /* 16. Responsive      */
@@ -781,17 +787,12 @@
         @media (max-width: 992px) {
             h1 { font-size: 3rem; }
             h2 { font-size: 2.2rem; }
-            
             .about-content {
                 grid-template-columns: 1fr;
                 text-align: center;
             }
-            .about-image {
-                margin-bottom: 2rem;
-            }
-            .resume-container {
-                grid-template-columns: 1fr;
-            }
+            .about-image { margin-bottom: 2rem; }
+            .resume-container { grid-template-columns: 1fr; }
         }
 
         /* Mobile (<= 768px) */
@@ -799,65 +800,43 @@
             h1 { font-size: 2.5rem; }
             .home-content h1 { font-size: 2.8rem; }
             
-            /* --- Mobile Nav --- */
+            /* --- Mobile Nav (Glassmorphism) --- */
             .nav-links {
                 position: fixed;
                 top: var(--header-height);
-                left: -100%; /* Start off-screen */
+                left: -100%;
                 width: 100%;
                 height: calc(100vh - var(--header-height));
-                background-color: var(--surface-color);
+                /* Apply glass effect */
+                background-color: var(--header-bg);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+                
                 flex-direction: column;
                 align-items: center;
                 padding-top: 3rem;
                 gap: 2.5rem;
                 transition: left 0.3s ease-in-out, background-color 0.3s ease;
             }
-            
-            .nav-links.active {
-                left: 0; /* Slide in */
-            }
-
-            .nav-link {
-                font-size: 1.2rem;
-            }
-
-            .menu-toggle {
-                display: block; /* Show hamburger */
-            }
+            .nav-links.active { left: 0; }
+            .nav-link { font-size: 1.2rem; }
+            .menu-toggle { display: block; }
             /* --- End Mobile Nav --- */
 
-            .home-buttons {
-                flex-direction: column;
-            }
+            .home-buttons { flex-direction: column; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .contact-container { grid-template-columns: 1fr; }
 
-            .stats-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            
-            .contact-container {
-                grid-template-columns: 1fr;
-            }
-
-            /* On mobile, hide custom cursor for better touch experience */
-            .cursor-dot,
-            .cursor-outline {
-                display: none;
-            }
-            body, a, button, .btn {
-                cursor: auto; /* Restore default cursor */
-            }
+            /* Hide custom cursor on touch devices */
+            .cursor-dot, .cursor-outline { display: none; }
+            body, a, button, .btn { cursor: auto; }
         }
         
         /* Small Mobile (<= 576px) */
         @media (max-width: 576px) {
-            .container {
-                padding: 0 1rem;
-            }
+            .container { padding: 0 1rem; }
             .home-content h1 { font-size: 2.2rem; }
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
+            .stats-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -870,13 +849,9 @@
         (function() {
             const savedTheme = localStorage.getItem('theme');
             const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
             if (savedTheme === 'light') {
                 document.body.classList.add('light-mode');
-            } else if (savedTheme === 'dark') {
-                document.body.classList.remove('light-mode');
-            } else if (!systemPrefersDark) {
-                // If no saved theme, use system preference (and default to light if system is light)
+            } else if (savedTheme !== 'dark' && !systemPrefersDark) {
                 document.body.classList.add('light-mode');
             }
         })();
@@ -886,7 +861,6 @@
     <header class="header" id="header">
         <nav class="navbar container">
             <a href="#home" class="logo">Rakib<span>.dev</span></a>
-            
             <ul class="nav-links" id="nav-links">
                 <li><a href="#home" class="nav-link active">Home</a></li>
                 <li><a href="#about" class="nav-link">About</a></li>
@@ -896,7 +870,6 @@
                 <li><a href="#portfolio" class="nav-link">Portfolio</a></li>
                 <li><a href="#contact" class="nav-link">Contact</a></li>
             </ul>
-
             <div class="nav-controls">
                 <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
                     <i class="fas fa-moon"></i>
@@ -925,7 +898,10 @@
         </section>
 
         <section id="about" class="section container">
-            <h2 class="section-title">About Me</h2>
+            <div class="section-header">
+                <span class="section-subtitle">Who I Am</span>
+                <h2 class="section-title">About Me</h2>
+            </div>
             <div class="about-content fade-in">
                 <div class="about-image">
                     </div>
@@ -944,7 +920,10 @@
 
         <section id="skills" class="section">
             <div class="container">
-                <h2 class="section-title">My Tech Stack</h2>
+                <div class="section-header">
+                    <span class="section-subtitle">My Arsenal</span>
+                    <h2 class="section-title">My Tech Stack</h2>
+                </div>
                 <div class="skills-grid">
                     <div class="skill-category fade-in">
                         <h3><i class="fas fa-desktop"></i> Frontend</h3>
@@ -981,7 +960,10 @@
         </section>
 
         <section id="services" class="section container">
-            <h2 class="section-title">What I Do</h2>
+            <div class="section-header">
+                <span class="section-subtitle">What I Offer</span>
+                <h2 class="section-title">What I Do</h2>
+            </div>
             <div class="services-grid">
                 <div class="service-card fade-in">
                     <i class="icon fas fa-code"></i>
@@ -1003,18 +985,19 @@
 
         <section id="resume" class="section">
             <div class="container">
-                <h2 class="section-title">Resume</h2>
+                <div class="section-header">
+                    <span class="section-subtitle">My Journey</span>
+                    <h2 class="section-title">Resume</h2>
+                </div>
                 <div class="resume-container">
                     <div class="resume-column fade-in">
                         <h3><i class="fas fa-briefcase"></i> Professional Experience</h3>
-                        
                         <div class="timeline-item">
                             <span class="date">2021 - Present</span>
                             <h4>Full Stack Developer</h4>
                             <h5>Your Company Name, City</h5>
                             <p>Describe your role. Built and maintained web applications using Spring Boot and Angular. Developed REST APIs, managed SQL databases, and collaborated with cross-functional teams.</p>
                         </div>
-                        
                         <div class="timeline-item">
                             <span class="date">2019 - 2021</span>
                             <h4>Java Developer</h4>
@@ -1022,17 +1005,14 @@
                             <p>Focused on backend development with Java and Spring. Worked on legacy JSP/Servlet applications and contributed to migrating services to Spring Boot.</p>
                         </div>
                     </div>
-
                     <div class="resume-column fade-in">
                         <h3><i class="fas fa-graduation-cap"></i> Education & Certifications</h3>
-                        
                         <div class="timeline-item">
                             <span class="date">2015 - 2019</span>
                             <h4>B.Sc. in Computer Science & Engineering</h4>
                             <h5>Your University, City</h5>
                             <p>Relevant coursework: Data Structures, Algorithms, Database Systems, Web Development, Object-Oriented Programming.</p>
                         </div>
-                        
                         <div class="timeline-item">
                             <span class="date">2022</span>
                             <h4>Oracle Certified Professional, Java SE</h4>
@@ -1045,9 +1025,11 @@
         </section>
 
         <section id="portfolio" class="section container">
-            <h2 class="section-title">My Portfolio</h2>
+            <div class="section-header">
+                <span class="section-subtitle">My Work</span>
+                <h2 class="section-title">My Portfolio</h2>
+            </div>
             <div class="portfolio-grid">
-
                 <div class="project-card fade-in">
                     <div class="project-image" style="background-image: url('https://via.placeholder.com/400x250/555/eee/?text=E-commerce+Platform');"></div>
                     <div class="project-content">
@@ -1064,7 +1046,6 @@
                         </div>
                     </div>
                 </div>
-                
                 <div class="project-card fade-in">
                     <div class="project-image" style="background-image: url('https://via.placeholder.com/400x250/555/eee/?text=Project+Management+Tool');"></div>
                     <div class="project-content">
@@ -1081,7 +1062,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="project-card fade-in">
                     <div class="project-image" style="background-image: url('https://via.placeholder.com/400x250/555/eee/?text=Inventory+System');"></div>
                     <div class="project-content">
@@ -1096,7 +1076,6 @@
                         </div>
                     </div>
                 </div>
-                
             </div>
         </section>
 
@@ -1129,12 +1108,16 @@
 
         <section id="testimonials" class="section">
             <div class="container">
-                <h2 class="section-title">What Clients Say</h2>
+                <div class="section-header">
+                    <span class="section-subtitle">Feedback</span>
+                    <h2 class="section-title">What Clients Say</h2>
+                </div>
                 <div class="testimonial-slider fade-in">
                     <div class="testimonial-card">
                         <p class="quote">
                             "Rakib is an incredibly skilled developer. He delivered our project on time,
-                            within budget, and exceeded our expectations."
+                            within budget, and exceeded our expectations. His knowledge of both Java
+                            and Angular is top-notch."
                         </p>
                         <div class="testimonial-author">
                             <div class="author-img"></div>
@@ -1149,7 +1132,10 @@
         </section>
 
         <section id="blog" class="section container">
-            <h2 class="section-title">Recent Articles</h2>
+            <div class="section-header">
+                <span class="section-subtitle">My Thoughts</span>
+                <h2 class="section-title">Recent Articles</h2>
+            </div>
             <div class="blog-grid">
                 <div class="blog-card fade-in">
                     <div class="blog-image" style="background-image: url('https://via.placeholder.com/400x200/555/eee/?text=Spring+Boot+Article');"></div>
@@ -1180,7 +1166,10 @@
 
         <section id="contact" class="section">
             <div class="container">
-                <h2 class="section-title">Get In Touch</h2>
+                <div class="section-header">
+                    <span class="section-subtitle">Let's Connect</span>
+                    <h2 class="section-title">Get In Touch</h2>
+                </div>
                 <div class="contact-container">
                     <div class="contact-info fade-in">
                         <h3>Let's build something great!</h3>
@@ -1249,7 +1238,9 @@
             const scrollTopBtn = document.getElementById('scroll-top-btn');
             const cursorDot = document.getElementById('cursor-dot');
             const cursorOutline = document.getElementById('cursor-outline');
-            const hoverables = document.querySelectorAll('a, button, .btn, .project-card, .service-card, .skill-item');
+            const hoverables = document.querySelectorAll(
+                'a, button, .btn, .project-card, .service-card, .skill-item, .blog-card, .timeline-item, .social-links a'
+            );
 
             // --- 2. Mobile Menu Toggle ---
             menuToggle.addEventListener('click', () => {
@@ -1259,7 +1250,6 @@
                 icon.classList.toggle('fa-times');
             });
 
-            // Close mobile menu when a link is clicked
             allNavLinks.forEach(link => {
                 link.addEventListener('click', () => {
                     if (navLinks.classList.contains('active')) {
@@ -1273,30 +1263,15 @@
             // --- 3. Light/Dark Mode Toggle ---
             themeToggle.addEventListener('click', () => {
                 document.body.classList.toggle('light-mode');
-                
-                // Save preference to localStorage
-                if (document.body.classList.contains('light-mode')) {
-                    localStorage.setItem('theme', 'light');
-                } else {
-                    localStorage.setItem('theme', 'dark');
-                }
+                localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
             });
 
             // --- 4. Sticky Header & Scroll-to-Top Button ---
             window.addEventListener('scroll', () => {
                 // Sticky Header
-                if (window.scrollY > 50) {
-                    header.classList.add('sticky');
-                } else {
-                    header.classList.remove('sticky');
-                }
-
+                header.classList.toggle('sticky', window.scrollY > 50);
                 // Scroll to Top Button
-                if (window.scrollY > 300) {
-                    scrollTopBtn.classList.add('visible');
-                } else {
-                    scrollTopBtn.classList.remove('visible');
-                }
+                scrollTopBtn.classList.toggle('visible', window.scrollY > 300);
             });
 
             // --- 5. Scroll-Spy (Active Nav Link on Scroll) ---
@@ -1311,13 +1286,8 @@
                         }
                     }
                 });
-            }, {
-                rootMargin: '-20% 0px -80% 0px'
-            });
-
-            sections.forEach(section => {
-                sectionObserver.observe(section);
-            });
+            }, { rootMargin: '-20% 0px -80% 0px' });
+            sections.forEach(section => sectionObserver.observe(section));
 
             // --- 6. Fade-in Animations on Scroll ---
             const fadeObserver = new IntersectionObserver((entries) => {
@@ -1327,43 +1297,30 @@
                         fadeObserver.unobserve(entry.target);
                     }
                 });
-            }, {
-                threshold: 0.1
-            });
-
-            document.querySelectorAll('.fade-in').forEach(el => {
-                fadeObserver.observe(el);
-            });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.fade-in').forEach(el => fadeObserver.observe(el));
 
             // --- 7. Custom Cursor Animation ---
             let mouseX = 0, mouseY = 0;
             let cursorX = 0, cursorY = 0;
-            const delay = 0.1; // Delay factor for the outline
+            const delay = 0.1; 
 
-            // Update mouse position
             window.addEventListener('mousemove', (e) => {
                 mouseX = e.clientX;
                 mouseY = e.clientY;
             });
 
-            // Animation loop for the cursor
             function animateCursor() {
-                // Move dot instantly
                 cursorDot.style.left = `${mouseX}px`;
                 cursorDot.style.top = `${mouseY}px`;
-                
-                // Lerp (linear interpolation) for smooth outline movement
                 cursorX += (mouseX - cursorX) * delay;
                 cursorY += (mouseY - cursorY) * delay;
-                
                 cursorOutline.style.left = `${cursorX}px`;
                 cursorOutline.style.top = `${cursorY}px`;
-                
                 requestAnimationFrame(animateCursor);
             }
             animateCursor();
 
-            // Add hover effect
             hoverables.forEach(el => {
                 el.addEventListener('mouseenter', () => {
                     cursorDot.classList.add('cursor-hover');
@@ -1374,7 +1331,6 @@
                     cursorOutline.classList.remove('cursor-hover');
                 });
             });
-
         });
     </script>
 </body>
