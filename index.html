@@ -15,14 +15,34 @@
         /* ------------------- */
         /* 1. Global & Variables */
         /* ------------------- */
+        
+        /* * By default, we use the DARK THEME variables.
+         * The 'body.light-mode' selector will override these.
+        */
         :root {
-            --primary-color: #00aaff; /* Bright blue accent */
-            --bg-color: #121212;      /* Deep dark background */
-            --surface-color: #1e1e1e; /* Card/surface background */
-            --text-color: #f0f0f0;    /* Main text color */
-            --secondary-text-color: #a0a0a0; /* Lighter text */
+            --primary-color: #00aaff;
+            
+            /* Dark Theme (Default) */
+            --bg-color: #121212;
+            --surface-color: #1e1e1e;
+            --text-color: #f0f0f0;
+            --secondary-text-color: #a0a0a0;
             --border-color: #333;
+            --header-bg: rgba(30, 30, 30, 0.9);
+            --shadow-color: rgba(0, 0, 0, 0.3);
+
             --header-height: 60px;
+        }
+
+        body.light-mode {
+            /* Light Theme */
+            --bg-color: #f4f4f4;
+            --surface-color: #ffffff;
+            --text-color: #121212;
+            --secondary-text-color: #555;
+            --border-color: #ddd;
+            --header-bg: rgba(255, 255, 255, 0.9);
+            --shadow-color: rgba(0, 0, 0, 0.1);
         }
 
         * {
@@ -41,14 +61,57 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             line-height: 1.6;
-            overflow-x: hidden; /* Prevents horizontal scroll */
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
+
+        /* --- Custom Cursor --- */
+        body, a, button, .btn {
+            cursor: none; /* Hide default cursor */
+        }
+        
+        .cursor-dot,
+        .cursor-outline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.1s ease;
+        }
+        
+        .cursor-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--primary-color);
+        }
+
+        .cursor-outline {
+            width: 30px;
+            height: 30px;
+            border: 2px solid var(--primary-color);
+            opacity: 0.7;
+        }
+        
+        /* Cursor hover effect */
+        .cursor-hover .cursor-dot {
+            opacity: 0;
+        }
+        .cursor-hover .cursor-outline {
+            transform: translate(-50%, -50%) scale(1.5);
+            background-color: rgba(0, 170, 255, 0.2);
+        }
+        /* --- End Custom Cursor --- */
+
 
         h1, h2, h3, h4, h5, h6 {
             color: var(--text-color);
             font-weight: 600;
             line-height: 1.2;
             margin-bottom: 1rem;
+            transition: color 0.3s ease;
         }
 
         h1 { font-size: 3.5rem; }
@@ -58,6 +121,7 @@
         p {
             color: var(--secondary-text-color);
             margin-bottom: 1rem;
+            transition: color 0.3s ease;
         }
 
         a {
@@ -67,7 +131,7 @@
         }
 
         a:hover {
-            color: #fff;
+            color: var(--text-color);
         }
 
         img {
@@ -91,7 +155,7 @@
 
         .section {
             padding: 6rem 0;
-            overflow: hidden; /* For animations */
+            overflow: hidden;
         }
 
         .section-title {
@@ -166,8 +230,8 @@
         }
 
         .header.sticky {
-            background-color: rgba(30, 30, 30, 0.95); /* Slightly transparent */
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            background-color: var(--header-bg);
+            box-shadow: 0 2px 10px var(--shadow-color);
             backdrop-filter: blur(5px);
             -webkit-backdrop-filter: blur(5px);
         }
@@ -182,7 +246,7 @@
         .logo {
             font-size: 1.5rem;
             font-weight: 700;
-            color: #fff;
+            color: var(--text-color);
         }
         .logo span {
             color: var(--primary-color);
@@ -190,6 +254,7 @@
 
         .nav-links {
             display: flex;
+            align-items: center;
             gap: 2rem;
         }
 
@@ -217,11 +282,41 @@
             color: var(--primary-color);
         }
 
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        /* --- Theme Toggle Button --- */
+        .theme-toggle {
+            font-size: 1.2rem;
+            color: var(--text-color);
+            cursor: none; /* Already set on body, but good to be explicit */
+            background: none;
+            border: none;
+            padding: 0.25rem;
+        }
+        .theme-toggle .fa-sun {
+            display: none; /* Hidden in dark mode (default) */
+        }
+        .theme-toggle .fa-moon {
+            display: block; /* Shown in dark mode (default) */
+        }
+        body.light-mode .theme-toggle .fa-sun {
+            display: block;
+        }
+        body.light-mode .theme-toggle .fa-moon {
+            display: none;
+        }
+        /* --- End Theme Toggle --- */
+
+
         .menu-toggle {
             display: none; /* Hidden on desktop */
             font-size: 1.5rem;
-            color: #fff;
-            cursor: pointer;
+            color: var(--text-color);
+            cursor: none;
             background: none;
             border: none;
         }
@@ -236,7 +331,9 @@
             align-items: center;
             justify-content: center;
             text-align: center;
+            /* Dark overlay is good for both light/dark mode text visibility */
             background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') no-repeat center center/cover;
+            position: relative;
         }
 
         .home-content {
@@ -246,12 +343,13 @@
         .home-content h3 {
             font-size: 1.5rem;
             font-weight: 400;
-            color: var(--secondary-text-color);
+            color: #eee; /* Kept light for hero bg */
         }
 
         .home-content h1 {
             font-size: 4rem;
             margin: 0.5rem 0;
+            color: #fff; /* Kept light for hero bg */
         }
 
         .home-content h1 span {
@@ -262,6 +360,11 @@
             font-size: 1.75rem;
             font-weight: 500;
             margin-bottom: 2rem;
+            color: #f0f0f0; /* Kept light for hero bg */
+        }
+        
+        .home-content p {
+            color: #ddd; /* Kept light for hero bg */
         }
 
         .home-buttons {
@@ -269,6 +372,16 @@
             justify-content: center;
             gap: 1rem;
             margin-top: 2rem;
+        }
+        /* Override for hero buttons */
+        .home-buttons .btn-secondary {
+            color: #fff;
+            border-color: #fff;
+        }
+        .home-buttons .btn-secondary:hover {
+            background: #fff;
+            color: #333;
+            border-color: #fff;
         }
 
         /* ------------------- */
@@ -282,17 +395,16 @@
         }
         
         .about-image {
-            /* Placeholder for a profile picture */
             width: 300px;
             height: 300px;
             background: var(--surface-color);
             border: 5px solid var(--border-color);
             border-radius: 50%;
             margin: 0 auto;
-            /* Replace with your image */
             background-image: url('https://via.placeholder.com/300'); 
             background-size: cover;
             background-position: center;
+            transition: border-color 0.3s ease, background-color 0.3s ease;
         }
 
         .about-text h3 {
@@ -308,6 +420,7 @@
         /* ------------------- */
         #skills {
             background-color: var(--surface-color);
+            transition: background-color 0.3s ease;
         }
         
         .skills-grid {
@@ -321,12 +434,12 @@
             padding: 2rem;
             border-radius: 10px;
             border: 1px solid var(--border-color);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: all 0.3s ease;
         }
 
         .skill-category:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 20px var(--shadow-color);
         }
 
         .skill-category h3 {
@@ -351,6 +464,7 @@
             font-size: 0.9rem;
             font-weight: 500;
             border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
         }
 
         /* ------------------- */
@@ -368,6 +482,7 @@
             border-radius: 10px;
             text-align: center;
             border-bottom: 4px solid transparent;
+            box-shadow: 0 5px 15px var(--shadow-color);
             transition: all 0.3s ease;
         }
 
@@ -387,6 +502,7 @@
         /* ------------------- */
         #resume {
             background-color: var(--surface-color);
+            transition: background-color 0.3s ease;
         }
 
         .resume-container {
@@ -404,18 +520,20 @@
             position: relative;
             padding: 1rem 0 2rem 2rem;
             border-left: 2px solid var(--border-color);
+            transition: border-color 0.3s ease;
         }
 
         .timeline-item::before {
             content: '';
             position: absolute;
-            left: -11px; /* (20px / 2) - (2px / 2) */
+            left: -11px;
             top: 1.2rem;
             width: 20px;
             height: 20px;
             border-radius: 50%;
             background-color: var(--bg-color);
             border: 4px solid var(--primary-color);
+            transition: background-color 0.3s ease;
         }
 
         .timeline-item h4 {
@@ -432,6 +550,7 @@
             padding: 0.25rem 0.75rem;
             border-radius: 15px;
             margin-bottom: 0.75rem;
+            transition: all 0.3s ease;
         }
 
         .timeline-item p {
@@ -452,8 +571,8 @@
             background-color: var(--surface-color);
             border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s ease;
+            box-shadow: 0 5px 15px var(--shadow-color);
+            transition: all 0.3s ease;
         }
 
         .project-card:hover {
@@ -464,7 +583,6 @@
             width: 100%;
             height: 220px;
             background-color: #333;
-            /* Placeholder image */
             background-image: url('https://via.placeholder.com/400x250/333/888/?text=Project+Screenshot');
             background-size: cover;
             background-position: center;
@@ -474,32 +592,19 @@
             padding: 1.5rem;
         }
 
-        .project-content h3 {
-            margin-bottom: 0.5rem;
-        }
-
-        .project-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
         .project-tag {
             font-size: 0.8rem;
             background-color: var(--bg-color);
             color: var(--primary-color);
             padding: 0.25rem 0.75rem;
             border-radius: 15px;
+            transition: all 0.3s ease;
         }
 
         .project-links a {
             font-size: 1.2rem;
             margin-right: 1rem;
             color: var(--secondary-text-color);
-        }
-        .project-links a:hover {
-            color: var(--primary-color);
         }
 
         /* ------------------- */
@@ -517,22 +622,12 @@
             grid-template-columns: repeat(4, 1fr);
             gap: 2rem;
         }
-
-        .stat-item .icon {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-        }
-        
+        /* All text in stats is light, so no changes needed for light/dark */
         .stat-item h3 {
-            font-size: 2.5rem;
             color: #fff;
-            margin: 0;
         }
-
         .stat-item p {
-            font-size: 1.1rem;
             color: #fff;
-            margin: 0;
         }
 
         /* ------------------- */
@@ -540,13 +635,7 @@
         /* ------------------- */
         #testimonials {
             background-color: var(--surface-color);
-        }
-
-        .testimonial-slider {
-            /* Basic slider - for a real one, use JS library */
-            max-width: 800px;
-            margin: 0 auto;
-            text-align: center;
+            transition: background-color 0.3s ease;
         }
 
         .testimonial-card {
@@ -554,6 +643,8 @@
             padding: 2rem;
             border-radius: 10px;
             border-left: 5px solid var(--primary-color);
+            box-shadow: 0 5px 15px var(--shadow-color);
+            transition: all 0.3s ease;
         }
 
         .testimonial-card p.quote {
@@ -562,77 +653,23 @@
             color: var(--text-color);
             margin-bottom: 1.5rem;
         }
-
-        .testimonial-author {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1rem;
-        }
-
-        .author-img {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background-color: #555;
-            background-image: url('https://via.placeholder.com/60');
-        }
-
+        
         .author-info h4 {
-            margin: 0;
             color: var(--text-color);
-        }
-        .author-info p {
-            margin: 0;
-            font-size: 0.9rem;
         }
 
         /* ------------------- */
         /* 12. Blog Section    */
         /* ------------------- */
-        .blog-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2rem;
-        }
-
         .blog-card {
             background-color: var(--surface-color);
             border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s ease;
+            box-shadow: 0 5px 15px var(--shadow-color);
+            transition: all 0.3s ease;
         }
         .blog-card:hover {
             transform: translateY(-5px);
-        }
-        
-        .blog-image {
-            width: 100%;
-            height: 200px;
-            background-color: #333;
-            background-image: url('https://via.placeholder.com/400x200/333/888/?text=Blog+Article');
-            background-size: cover;
-            background-position: center;
-        }
-
-        .blog-content {
-            padding: 1.5rem;
-        }
-
-        .blog-content .date {
-            font-size: 0.85rem;
-            color: var(--secondary-text-color);
-            margin-bottom: 0.5rem;
-        }
-
-        .blog-content h3 {
-            font-size: 1.25rem;
-            margin-bottom: 1rem;
-        }
-        
-        .blog-content a {
-            font-weight: 500;
         }
 
         /* ------------------- */
@@ -640,21 +677,9 @@
         /* ------------------- */
         #contact {
             background-color: var(--surface-color);
+            transition: background-color 0.3s ease;
         }
 
-        .contact-container {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 3rem;
-        }
-
-        .contact-info-item {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        
         .contact-info-item .icon {
             font-size: 1.5rem;
             color: var(--primary-color);
@@ -664,17 +689,7 @@
             border-radius: 50%;
             display: grid;
             place-items: center;
-        }
-
-        .contact-info-item h4 {
-            margin: 0 0 0.25rem 0;
-        }
-        .contact-info-item p {
-            margin: 0;
-        }
-
-        .contact-form .form-group {
-            margin-bottom: 1.5rem;
+            transition: background-color 0.3s ease;
         }
 
         .contact-form input,
@@ -686,6 +701,7 @@
             border-radius: 5px;
             color: var(--text-color);
             font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
         }
 
         .contact-form input:focus,
@@ -693,11 +709,6 @@
             outline: none;
             border-color: var(--primary-color);
             box-shadow: 0 0 5px rgba(0, 170, 255, 0.5);
-        }
-
-        .contact-form textarea {
-            min-height: 150px;
-            resize: vertical;
         }
 
         /* ------------------- */
@@ -708,13 +719,7 @@
             padding: 3rem 0;
             text-align: center;
             border-top: 1px solid var(--border-color);
-        }
-
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
         }
 
         .social-links a {
@@ -734,13 +739,42 @@
             transform: scale(1.1);
         }
 
-        .copyright {
-            color: var(--secondary-text-color);
-            font-size: 0.9rem;
+        /* ------------------- */
+        /* 15. Scroll to Top   */
+        /* ------------------- */
+        .scroll-top-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 45px;
+            height: 45px;
+            background-color: var(--primary-color);
+            color: #fff;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            font-size: 1.2rem;
+            box-shadow: 0 5px 10px var(--shadow-color);
+            z-index: 500;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        .scroll-top-btn.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .scroll-top-btn:hover {
+            color: #fff;
+            transform: scale(1.1);
         }
 
         /* ------------------- */
-        /* 15. Responsive Design */
+        /* 16. Responsive      */
         /* ------------------- */
         
         /* Tablets (<= 992px) */
@@ -755,10 +789,8 @@
             .about-image {
                 margin-bottom: 2rem;
             }
-
             .resume-container {
                 grid-template-columns: 1fr;
-                gap: 2rem;
             }
         }
 
@@ -779,7 +811,7 @@
                 align-items: center;
                 padding-top: 3rem;
                 gap: 2.5rem;
-                transition: left 0.3s ease-in-out;
+                transition: left 0.3s ease-in-out, background-color 0.3s ease;
             }
             
             .nav-links.active {
@@ -806,6 +838,15 @@
             .contact-container {
                 grid-template-columns: 1fr;
             }
+
+            /* On mobile, hide custom cursor for better touch experience */
+            .cursor-dot,
+            .cursor-outline {
+                display: none;
+            }
+            body, a, button, .btn {
+                cursor: auto; /* Restore default cursor */
+            }
         }
         
         /* Small Mobile (<= 576px) */
@@ -813,27 +854,39 @@
             .container {
                 padding: 0 1rem;
             }
-            
             .home-content h1 { font-size: 2.2rem; }
-            .home-content .subtitle { font-size: 1.2rem; }
-            
             .stats-grid {
                 grid-template-columns: 1fr;
             }
-
-            .about-image {
-                width: 250px;
-                height: 250px;
-            }
         }
-
     </style>
 </head>
 <body>
+    
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-outline" id="cursor-outline"></div>
+
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-mode');
+            } else if (savedTheme === 'dark') {
+                document.body.classList.remove('light-mode');
+            } else if (!systemPrefersDark) {
+                // If no saved theme, use system preference (and default to light if system is light)
+                document.body.classList.add('light-mode');
+            }
+        })();
+    </script>
+
 
     <header class="header" id="header">
         <nav class="navbar container">
             <a href="#home" class="logo">Rakib<span>.dev</span></a>
+            
             <ul class="nav-links" id="nav-links">
                 <li><a href="#home" class="nav-link active">Home</a></li>
                 <li><a href="#about" class="nav-link">About</a></li>
@@ -843,9 +896,16 @@
                 <li><a href="#portfolio" class="nav-link">Portfolio</a></li>
                 <li><a href="#contact" class="nav-link">Contact</a></li>
             </ul>
-            <button class="menu-toggle" id="menu-toggle" aria-label="Open menu">
-                <i class="fas fa-bars"></i>
-            </button>
+
+            <div class="nav-controls">
+                <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                    <i class="fas fa-sun"></i>
+                </button>
+                <button class="menu-toggle" id="menu-toggle" aria-label="Open menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
         </nav>
     </header>
 
@@ -1033,11 +1093,11 @@
                         <p>A desktop application for managing warehouse inventory, built using Java Swing for the UI and JDBC for database connectivity.</p>
                         <div class="project-links">
                             <a href="#" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
-                            </div>
+                        </div>
                     </div>
                 </div>
-
-                </div>
+                
+            </div>
         </section>
 
         <section id="stats" class="section">
@@ -1074,8 +1134,7 @@
                     <div class="testimonial-card">
                         <p class="quote">
                             "Rakib is an incredibly skilled developer. He delivered our project on time,
-                            within budget, and exceeded our expectations. His knowledge of both Java
-                            and Angular is top-notch."
+                            within budget, and exceeded our expectations."
                         </p>
                         <div class="testimonial-author">
                             <div class="author-img"></div>
@@ -1097,7 +1156,6 @@
                     <div class="blog-content">
                         <p class="date">October 15, 2025</p>
                         <h3>Mastering REST APIs with Spring Boot</h3>
-                        <p>A deep dive into building efficient and secure RESTful services using the Spring Boot framework.</p>
                         <a href="#">Read More &rarr;</a>
                     </div>
                 </div>
@@ -1106,7 +1164,6 @@
                     <div class="blog-content">
                         <p class="date">September 28, 2025</p>
                         <h3>Angular State Management with Services</h3>
-                        <p>Exploring simple yet powerful state management techniques in Angular without using a complex library.</p>
                         <a href="#">Read More &rarr;</a>
                     </div>
                 </div>
@@ -1115,7 +1172,6 @@
                     <div class="blog-content">
                         <p class="date">August 10, 2025</p>
                         <h3>Why Java is Still a Powerhouse in 2025</h3>
-                        <p>An overview of Java's continued relevance in enterprise applications, cloud-native development, and more.</p>
                         <a href="#">Read More &rarr;</a>
                     </div>
                 </div>
@@ -1128,8 +1184,7 @@
                 <div class="contact-container">
                     <div class="contact-info fade-in">
                         <h3>Let's build something great!</h3>
-                        <p>I'm open to new opportunities and collaborations. Feel free to reach out via email or phone, or send me a message using the form.</p>
-                        
+                        <p>I'm open to new opportunities. Feel free to reach out via email or phone, or send me a message using the form.</p>
                         <div class="contact-info-item">
                             <div class="icon"><i class="fas fa-map-marker-alt"></i></div>
                             <div>
@@ -1144,13 +1199,6 @@
                                 <p>your.email@example.com</p>
                             </div>
                         </div>
-                        <div class="contact-info-item">
-                            <div class="icon"><i class="fas fa-phone-alt"></i></div>
-                            <div>
-                                <h4>Phone</h4>
-                                <p>+880 123 456 7890</p>
-                            </div>
-                        </div>
                     </div>
                     
                     <form action="#" class="contact-form fade-in">
@@ -1159,9 +1207,6 @@
                         </div>
                         <div class="form-group">
                             <input type="email" name="email" placeholder="Your Email" required>
-                        </div>
-                        <div class="form-group">
-                            <input type="text" name="subject" placeholder="Subject">
                         </div>
                         <div class="form-group">
                             <textarea name="message" placeholder="Your Message" required></textarea>
@@ -1186,28 +1231,32 @@
         </div>
     </footer>
 
+    <a href="#home" class="scroll-top-btn" id="scroll-top-btn" aria-label="Scroll to top">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
 
+            // --- 1. Element Selectors ---
             const header = document.getElementById('header');
             const menuToggle = document.getElementById('menu-toggle');
             const navLinks = document.getElementById('nav-links');
             const allNavLinks = document.querySelectorAll('.nav-link');
             const sections = document.querySelectorAll('section[id]');
+            const themeToggle = document.getElementById('theme-toggle');
+            const scrollTopBtn = document.getElementById('scroll-top-btn');
+            const cursorDot = document.getElementById('cursor-dot');
+            const cursorOutline = document.getElementById('cursor-outline');
+            const hoverables = document.querySelectorAll('a, button, .btn, .project-card, .service-card, .skill-item');
 
-            // --- 1. Mobile Menu Toggle ---
+            // --- 2. Mobile Menu Toggle ---
             menuToggle.addEventListener('click', () => {
                 navLinks.classList.toggle('active');
-                // Toggle hamburger icon
                 const icon = menuToggle.querySelector('i');
-                if (icon.classList.contains('fa-bars')) {
-                    icon.classList.remove('fa-bars');
-                    icon.classList.add('fa-times');
-                } else {
-                    icon.classList.remove('fa-times');
-                    icon.classList.add('fa-bars');
-                }
+                icon.classList.toggle('fa-bars');
+                icon.classList.toggle('fa-times');
             });
 
             // Close mobile menu when a link is clicked
@@ -1221,25 +1270,41 @@
                 });
             });
 
-            // --- 2. Sticky Header ---
+            // --- 3. Light/Dark Mode Toggle ---
+            themeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('light-mode');
+                
+                // Save preference to localStorage
+                if (document.body.classList.contains('light-mode')) {
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    localStorage.setItem('theme', 'dark');
+                }
+            });
+
+            // --- 4. Sticky Header & Scroll-to-Top Button ---
             window.addEventListener('scroll', () => {
+                // Sticky Header
                 if (window.scrollY > 50) {
                     header.classList.add('sticky');
                 } else {
                     header.classList.remove('sticky');
                 }
+
+                // Scroll to Top Button
+                if (window.scrollY > 300) {
+                    scrollTopBtn.classList.add('visible');
+                } else {
+                    scrollTopBtn.classList.remove('visible');
+                }
             });
 
-            // --- 3. Scroll-Spy (Active Nav Link on Scroll) ---
+            // --- 5. Scroll-Spy (Active Nav Link on Scroll) ---
             const sectionObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         const id = entry.target.getAttribute('id');
-                        // Remove active from all
-                        allNavLinks.forEach(link => {
-                            link.classList.remove('active');
-                        });
-                        // Add active to the matching link
+                        allNavLinks.forEach(link => link.classList.remove('active'));
                         const activeLink = document.querySelector(`.nav-link[href="#${id}"]`);
                         if (activeLink) {
                             activeLink.classList.add('active');
@@ -1247,30 +1312,67 @@
                     }
                 });
             }, {
-                rootMargin: '-20% 0px -80% 0px' // Activates when section is in the middle 20% of viewport
+                rootMargin: '-20% 0px -80% 0px'
             });
 
             sections.forEach(section => {
                 sectionObserver.observe(section);
             });
 
-
-            // --- 4. Fade-in Animations on Scroll ---
-            const fadeElements = document.querySelectorAll('.fade-in');
-
+            // --- 6. Fade-in Animations on Scroll ---
             const fadeObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('is-visible');
-                        fadeObserver.unobserve(entry.target); // Stop observing once it's visible
+                        fadeObserver.unobserve(entry.target);
                     }
                 });
             }, {
-                threshold: 0.1 // Trigger when 10% of the element is visible
+                threshold: 0.1
             });
 
-            fadeElements.forEach(el => {
+            document.querySelectorAll('.fade-in').forEach(el => {
                 fadeObserver.observe(el);
+            });
+
+            // --- 7. Custom Cursor Animation ---
+            let mouseX = 0, mouseY = 0;
+            let cursorX = 0, cursorY = 0;
+            const delay = 0.1; // Delay factor for the outline
+
+            // Update mouse position
+            window.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+
+            // Animation loop for the cursor
+            function animateCursor() {
+                // Move dot instantly
+                cursorDot.style.left = `${mouseX}px`;
+                cursorDot.style.top = `${mouseY}px`;
+                
+                // Lerp (linear interpolation) for smooth outline movement
+                cursorX += (mouseX - cursorX) * delay;
+                cursorY += (mouseY - cursorY) * delay;
+                
+                cursorOutline.style.left = `${cursorX}px`;
+                cursorOutline.style.top = `${cursorY}px`;
+                
+                requestAnimationFrame(animateCursor);
+            }
+            animateCursor();
+
+            // Add hover effect
+            hoverables.forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                    cursorDot.classList.add('cursor-hover');
+                    cursorOutline.classList.add('cursor-hover');
+                });
+                el.addEventListener('mouseleave', () => {
+                    cursorDot.classList.remove('cursor-hover');
+                    cursorOutline.classList.remove('cursor-hover');
+                });
             });
 
         });
